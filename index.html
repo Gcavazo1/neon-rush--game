@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Rush</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Inline SVG favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230ff'/%3E%3C/svg%3E" type="image/svg+xml">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Neon Rush</h1>
+        <div class="glow-line"></div>
+    </header>
+    
+    <!-- Main game container with device and reflection -->
+    <div id="reflection-container">
+        <!-- Device with game screen -->
+        <div id="device-container">
+            <img src="assets/custom-handheld_noBG.png" alt="Gameboy Device" id="device-image">
+            <div id="screen-area">
+                <!-- The actual game canvas (no HTML background elements) -->
+                <canvas id="game-canvas"></canvas>
+                <div id="score-display">Score: 0</div>
+                <div id="game-over">
+                    <h2>Game Over!</h2>
+                    <p id="final-score">Your score: 0</p>
+                    <button id="restart-btn">Play Again</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Device reflection -->
+        <div id="device-reflection" aria-hidden="true">
+            <img src="assets/custom-handheld_noBG.png" alt="" id="reflection-image">
+        </div>
+        
+        <!-- Reflection glow lines -->
+        <div class="glow-line-horizontal" style="bottom: 120px; animation-delay: 0s;"></div>
+        <div class="glow-line-horizontal" style="bottom: 180px; animation-delay: 2s;"></div>
+        <div class="glow-line-horizontal" style="bottom: 240px; animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="glow-line"></div>
+        <div class="footer-content">
+            <div class="instructions">
+                <h3>How to Play</h3>
+                <p>Press <span class="key">SPACE</span> or <span class="key">CLICK</span> to jump</p>
+                <p>Double jump to reach higher obstacles</p>
+            </div>
+            <div class="credits">
+                <p>&copy; 2025 Neon Rush</p>
+                <p>A futuristic endless runner game</p>
+            </div>
+        </div>
+        <!-- Spotify embed for music credit -->
+        <div class="spotify-credit">
+            <p>Music: B.E.R. - The Night Begins To Shine (Dragon Remix)</p>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7f52qHHo2fzkn1nex8hicr?utm_source=generator" 
+                width="100%" height="80" frameBorder="0" allowfullscreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+    </footer>
+
+    <!-- Game script -->
+    <script src="game.js"></script>
+</body>
+</html>

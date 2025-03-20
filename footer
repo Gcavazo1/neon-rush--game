@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Rush</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Simple data URI favicon (cyan square) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230ff'/%3E%3C/svg%3E" type="image/svg+xml">
+</head>
+<body>
+    <header>
+        <h1>Neon Rush</h1>
+        <div class="glow-line"></div>
+    </header>
+    
+    <!-- 
+        The size of the device can be adjusted in styles.css:
+        - Look for #device-container to adjust the overall device size (width and height in pixels)
+        - Look for #screen-area to adjust the game screen positioning
+        
+        For quick adjustments:
+        - Change the width and height values (in pixels) of #device-container
+        - Default values: width: 800px; height: 1200px;
+    -->
+    <div id="device-container">
+        <img src="assets/custom-handheld_noBG.png" alt="Gameboy Device" id="device-image">
+        <div id="screen-area">
+            <canvas id="game-canvas"></canvas>
+            <div id="score-display">Score: 0</div>
+            <div id="game-over">
+                <h2>Game Over!</h2>
+                <p id="final-score">Your score: 0</p>
+                <button id="restart-btn">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="glow-line"></div>
+        <div class="footer-content">
+            <div class="instructions">
+                <h3>How to Play</h3>
+                <p>Press <span class="key">SPACE</span> or <span class="key">CLICK</span> to jump</p>
+                <p>Double jump to reach higher obstacles</p>
+            </div>
+            <div class="credits">
+                <p>&copy; 2025 Neon Rush</p>
+                <p>A futuristic endless runner game</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="game.js"></script>
+</body>
+</html> 

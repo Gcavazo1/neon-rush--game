@@ -1,0 +1,13 @@
+[ignore]
+node_modules/
+dist/
+.vscode/
+.history/
+
+[format]
+js = ["prettier", "--write", "--single-quote", "--trailing-comma", "es5"]
+css = ["prettier", "--write"]
+html = ["prettier", "--write", "--print-width", "120"]
+
+[lint]
+js = ["eslint", "--fix"] 
