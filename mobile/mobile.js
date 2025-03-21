@@ -98,11 +98,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Fade out the background image
         gameAreaContainer.style.transition = `opacity ${ANIMATION.ZOOM_DURATION}ms ease-in-out`;
         
-        // First frame to trigger transitions
+        // First frame to trigger transitions - start both animations at the same time
         setTimeout(() => {
             zoomIcon.style.transform = `scale(${ANIMATION.MAX_ZOOM})`;
             zoomIcon.style.opacity = '0';
-            gameAreaContainer.style.opacity = '0.1'; // Fade background to almost transparent but not completely
+            gameAreaContainer.style.opacity = '0'; // Complete fade to make it fully disappear during zoom
         }, 50);
         
         // When zoom animation completes
