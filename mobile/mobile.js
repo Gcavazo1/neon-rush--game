@@ -25,26 +25,41 @@ document.addEventListener('DOMContentLoaded', function() {
         MAX_ZOOM: 8           // Maximum zoom factor
     };
     
-    // Game variables - similar to desktop version
+    // Game constants
+    const GAME = {
+        GRAVITY: 0.8,
+        JUMP_POWER: 15,
+        BASE_SPEED: 5,
+        RUSH_MULTIPLIER: 1.5,
+        OBSTACLE_INTERVAL: 1500,
+        MIN_OBSTACLE_INTERVAL: 800,
+        SPEED_RUSH_THRESHOLD: 50,
+        SPEED_RUSH_DURATION: 5000,
+        DOUBLE_TAP_THRESHOLD: 300,
+        JUMP_COOLDOWN: 200
+    };
+    
+    // Game variables
     let ctx;
     let gameStarted = false;
     let isGameOver = false;
     let score = 0;
+    let player = null;
     let obstacles = [];
     let particles = [];
     let lastObstacleTime = 0;
-    let obstacleInterval = 1500;
-    let baseObstacleInterval = 1500;
+    let obstacleInterval = GAME.OBSTACLE_INTERVAL;
+    let baseObstacleInterval = GAME.OBSTACLE_INTERVAL;
     let gridOffset = 0;
-    let speed = 5;
-    let baseSpeed = 5;
+    let speed = GAME.BASE_SPEED;
+    let baseSpeed = GAME.BASE_SPEED;
     let jumpCooldown = false;
     let lastJumpTime = 0;
     let lastTapTime = 0;
     let isSpeedRush = false;
     let speedRushEnd = 0;
     let scoreMultiplier = 1;
-    let nextSpeedRushScore = 50;
+    let nextSpeedRushScore = GAME.SPEED_RUSH_THRESHOLD;
     let difficultyLevel = 1;
     let colorTransitionProgress = 0;
     let colorTransitionDirection = 0;
@@ -58,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let devicePixelRatio = window.devicePixelRatio || 1;
     let frameID;
     let canvasWidth, canvasHeight;
+    let lastFrameTime = 0;
     
     // Initialize collapsible sections
     collapsibleHeaders.forEach(header => {
@@ -191,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentTime = new Date().getTime();
         const tapLength = currentTime - lastTapTime;
         
-        if (tapLength < 300 && tapLength > 0) {
+        if (tapLength < GAME.DOUBLE_TAP_THRESHOLD && tapLength > 0) {
             // Double tap detected
             if (player.jumpCount < 2 && !jumpCooldown) {
                 player.velY = -player.jumpPower * 0.8; // Slightly less powerful for second jump
@@ -240,9 +256,9 @@ document.addEventListener('DOMContentLoaded', function() {
             y: canvasHeight - (canvasWidth * 0.07) - 10, // Add small gap from bottom
             velY: 0,
             isJumping: false,
-            jumpPower: 15,
+            jumpPower: GAME.JUMP_POWER,
             jumpCount: 0,
-            gravity: 0.8,
+            gravity: GAME.GRAVITY,
             color: '#e807cb' // Purple player color
         };
         
@@ -322,10 +338,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (frameID) {
             cancelAnimationFrame(frameID);
         }
+        lastFrameTime = performance.now();
         frameID = requestAnimationFrame(gameLoop);
     }
     
-    function gameLoop() {
+    function gameLoop(timestamp) {
+        // Calculate delta time for smoother animation
+        const deltaTime = timestamp - lastFrameTime;
+        lastFrameTime = timestamp;
+        
         // Clear canvas
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         
@@ -336,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
         drawBackground();
         
         // Update and draw game elements
-        updateGameState();
+        updateGameState(deltaTime);
         drawGameElements();
         
         // Check collision
@@ -357,18 +378,20 @@ document.addEventListener('DOMContentLoaded', function() {
         score = 0;
         isGameOver = false;
         gameStarted = false;
-        obstacles.length = 0;
-        particles.length = 0;
-        speed = 5;
-        baseSpeed = 5;
-        obstacleInterval = 1500;
-        baseObstacleInterval = 1500;
+        obstacles = [];
+        particles = [];
+        speed = GAME.BASE_SPEED;
+        baseSpeed = GAME.BASE_SPEED;
+        obstacleInterval = GAME.OBSTACLE_INTERVAL;
+        baseObstacleInterval = GAME.OBSTACLE_INTERVAL;
         
         // Reset player state
-        player.y = canvasHeight - player.height;
-        player.velY = 0;
-        player.isJumping = false;
-        player.jumpCount = 0;
+        if (player) {
+            player.y = canvasHeight - player.height - 10;
+            player.velY = 0;
+            player.isJumping = false;
+            player.jumpCount = 0;
+        }
         
         // Reset UI
         mobileScoreDisplay.textContent = 'Score: 0';
@@ -379,18 +402,18 @@ document.addEventListener('DOMContentLoaded', function() {
         isSpeedRush = false;
         speedRushEnd = 0;
         scoreMultiplier = 1;
-        nextSpeedRushScore = 50;
+        nextSpeedRushScore = GAME.SPEED_RUSH_THRESHOLD;
         difficultyLevel = 1;
         
         // Reset color transition state
         colorTransitionProgress = 0;
         colorTransitionDirection = 0;
-        
-        // Show start screen
-        drawStartScreen();
     }
     
     function drawStartScreen() {
+        // Make sure canvas is cleared and properly initialized
+        if (!ctx) return;
+        
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         
         // Draw grid background
@@ -399,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Draw player
         drawPlayer();
         
-        // Draw start text
+        // Draw start text with proper scaling for device pixel ratio
         ctx.fillStyle = '#0ff';
         ctx.font = '30px ArcadeClassic';
         ctx.textAlign = 'center';
@@ -410,21 +433,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Update game state
-    function updateGameState() {
+    function updateGameState(deltaTime) {
+        // Normalize delta time for consistent movement speeds
+        const timeScale = deltaTime / 16.67; // 60 FPS is approximately 16.67ms per frame
+        
         // Apply gravity to player
-        player.velY += player.gravity;
-        player.y += player.velY;
+        player.velY += player.gravity * timeScale;
+        player.y += player.velY * timeScale;
         
         // Ground collision
-        if (player.y > canvasHeight - player.height) {
-            player.y = canvasHeight - player.height;
+        if (player.y > canvasHeight - player.height - 10) {
+            player.y = canvasHeight - player.height - 10;
             player.velY = 0;
             player.isJumping = false;
             player.jumpCount = 0;
         }
         
         // Reset jump cooldown
-        if (jumpCooldown && Date.now() - lastJumpTime > 200) {
+        if (jumpCooldown && Date.now() - lastJumpTime > GAME.JUMP_COOLDOWN) {
             jumpCooldown = false;
         }
         
@@ -432,24 +458,24 @@ document.addEventListener('DOMContentLoaded', function() {
         if (score >= nextSpeedRushScore && !isSpeedRush) {
             // Start speed rush
             isSpeedRush = true;
-            speedRushEnd = Date.now() + 5000; // 5 seconds duration
+            speedRushEnd = Date.now() + GAME.SPEED_RUSH_DURATION;
             scoreMultiplier = 2;
             
             // Increase difficulty level
             difficultyLevel++;
             
             // Set next speed rush threshold
-            nextSpeedRushScore += 50;
+            nextSpeedRushScore += GAME.SPEED_RUSH_THRESHOLD;
             
             // Begin color transition
             colorTransitionDirection = 1;
             
             // Increase speed for rush mode
-            baseSpeed = 5 + (difficultyLevel - 1) * 0.5;
-            speed = baseSpeed * 1.5;
+            baseSpeed = GAME.BASE_SPEED + (difficultyLevel - 1) * 0.5;
+            speed = baseSpeed * GAME.RUSH_MULTIPLIER;
             
             // Decrease obstacle interval for rush mode
-            baseObstacleInterval = Math.max(1500 - (difficultyLevel - 1) * 100, 800);
+            baseObstacleInterval = Math.max(GAME.OBSTACLE_INTERVAL - (difficultyLevel - 1) * 100, GAME.MIN_OBSTACLE_INTERVAL);
             obstacleInterval = baseObstacleInterval * 0.7;
         }
         
@@ -476,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update obstacles
         for (let i = obstacles.length - 1; i >= 0; i--) {
-            obstacles[i].x -= speed;
+            obstacles[i].x -= speed * timeScale;
             
             // Remove obstacles that have moved off screen
             if (obstacles[i].x + obstacles[i].width < 0) {
@@ -490,9 +516,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update particles
         for (let i = particles.length - 1; i >= 0; i--) {
-            particles[i].x += particles[i].vx;
-            particles[i].y += particles[i].vy;
-            particles[i].alpha -= 0.01;
+            particles[i].x += particles[i].vx * timeScale;
+            particles[i].y += particles[i].vy * timeScale;
+            particles[i].alpha -= 0.01 * timeScale;
             
             if (particles[i].alpha <= 0) {
                 particles.splice(i, 1);
@@ -519,29 +545,65 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to interpolate between two colors
     function interpolateColor(color1, color2, factor) {
-        if (factor === 0) return color1;
-        if (factor === 1) return color2;
-        return color1.replace(/[\d.]+/g, function(match) {
-            return Math.round(parseFloat(match) * (1 - factor) + parseFloat(match) * factor);
-        });
+        // Parse the rgba colors to extract components
+        const parseColor = (color) => {
+            if (color.startsWith('#')) {
+                // Hex color
+                const r = parseInt(color.slice(1, 3), 16);
+                const g = parseInt(color.slice(3, 5), 16);
+                const b = parseInt(color.slice(5, 7), 16);
+                return [r, g, b, 1];
+            } else if (color.startsWith('rgba')) {
+                // RGBA color
+                const parts = color.match(/[\d.]+/g);
+                return [
+                    parseInt(parts[0], 10),
+                    parseInt(parts[1], 10),
+                    parseInt(parts[2], 10),
+                    parseFloat(parts[3])
+                ];
+            } else if (color.startsWith('rgb')) {
+                // RGB color
+                const parts = color.match(/\d+/g);
+                return [
+                    parseInt(parts[0], 10),
+                    parseInt(parts[1], 10),
+                    parseInt(parts[2], 10),
+                    1
+                ];
+            }
+            return [0, 0, 0, 1]; // Default black
+        };
+        
+        const rgb1 = parseColor(color1);
+        const rgb2 = parseColor(color2);
+        
+        // Interpolate each component
+        const r = Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * factor);
+        const g = Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * factor);
+        const b = Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * factor);
+        const a = rgb1[3] + (rgb2[3] - rgb1[3]) * factor;
+        
+        // Return the interpolated color
+        return `rgba(${r}, ${g}, ${b}, ${a})`;
     }
     
     // Generate obstacles
     function generateObstacle() {
         const obstacleHeight = Math.random() * (canvasHeight * 0.2) + canvasHeight * 0.1;
-        let yPos = canvasHeight - obstacleHeight;
+        let yPos = canvasHeight - obstacleHeight - 10; // -10 to match player ground offset
         const obstacleWidth = canvasWidth * 0.05;
         
         // Determine obstacle type: ground or air
         const isAirObstacle = Math.random() > 0.7;
         
         if (isAirObstacle) {
-            yPos = canvasHeight - obstacleHeight - player.height * 1.2;
+            yPos = canvasHeight - obstacleHeight - player.height * 1.5;
         }
         
         // Create obstacle
         const obstacle = {
-            x: canvasWidth,
+            x: canvasWidth / devicePixelRatio, // Adjust for device pixel ratio
             y: yPos,
             width: obstacleWidth,
             height: obstacleHeight,
@@ -555,8 +617,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (Math.random() < doubleProbability && !isAirObstacle) {
             // Add a companion air obstacle
             obstacles.push({
-                x: canvasWidth + obstacleWidth * 2,
-                y: canvasHeight - obstacleHeight - player.height * 2,
+                x: (canvasWidth / devicePixelRatio) + obstacleWidth * 2,
+                y: canvasHeight - obstacleHeight - player.height * 2 - 10,
                 width: obstacleWidth,
                 height: obstacleHeight * 0.7,
                 color: '#e807cb', // Purple for air obstacle
@@ -582,10 +644,53 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Draw particles
         drawParticles();
+        
+        // Draw speed rush indicator if active
+        if (isSpeedRush) {
+            drawSpeedRushIndicator();
+        }
+    }
+    
+    // Draw speed rush indicator
+    function drawSpeedRushIndicator() {
+        const text = "SPEED RUSH x2";
+        const timeLeft = speedRushEnd - Date.now();
+        const progress = timeLeft / GAME.SPEED_RUSH_DURATION;
+        
+        // Position at top of screen
+        const x = canvasWidth / (2 * devicePixelRatio);
+        const y = 50;
+        
+        // Draw text
+        ctx.font = "20px ArcadeClassic";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#ff8a2c";
+        ctx.shadowColor = "#ff8a2c";
+        ctx.shadowBlur = 10;
+        ctx.fillText(text, x, y);
+        
+        // Draw progress bar
+        const barWidth = 120;
+        const barHeight = 8;
+        const barX = x - barWidth / 2;
+        const barY = y + 10;
+        
+        // Bar background
+        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.fillRect(barX, barY, barWidth, barHeight);
+        
+        // Bar fill
+        ctx.fillStyle = "#ff8a2c";
+        ctx.fillRect(barX, barY, barWidth * progress, barHeight);
+        
+        // Reset shadow
+        ctx.shadowBlur = 0;
     }
     
     // Draw player
     function drawPlayer() {
+        if (!player) return;
+        
         const glow = isSpeedRush ? '#ff8a2c' : '#0ff';
         
         // Player body
@@ -695,7 +800,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 size: Math.random() * particleSize + particleSize,
                 vx: (Math.random() - 0.5) * 5,
                 vy: Math.random() * 5,
-                color: '#0ff',
+                color: isSpeedRush ? '#ff8a2c' : '#0ff',
                 alpha: 1
             });
         }
@@ -731,7 +836,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const horizon = canvasHeight * 0.4;
         const gridRows = 20;
         const gridColumns = 20;
-        const vanishingPointX = canvasWidth / 2;
+        const vanishingPointX = canvasWidth / (2 * devicePixelRatio);
         
         // Interpolate grid color based on transition progress
         const currentGridColor = interpolateColor(normalGridColor, rushGridColor, colorTransitionProgress);
@@ -779,7 +884,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Check collision
     function checkCollision() {
-        if (isGameOver) return;
+        if (isGameOver || !player) return;
         
         for (let i = 0; i < obstacles.length; i++) {
             const obstacle = obstacles[i];
@@ -801,7 +906,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Game over
     function gameOver() {
         isGameOver = true;
-        cancelAnimationFrame(frameID);
+        
+        if (frameID) {
+            cancelAnimationFrame(frameID);
+            frameID = null;
+        }
         
         mobileGameOver.style.display = 'block';
         mobileFinalScore.textContent = `YOUR SCORE: ${score}`;
