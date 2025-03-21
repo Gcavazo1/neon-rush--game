@@ -14,6 +14,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileGameOver = document.getElementById('mobile-game-over');
     const mobileFinalScore = document.getElementById('mobile-final-score');
     const mobileRestartBtn = document.getElementById('mobile-restart-btn');
+    const gameLauncher = document.querySelector('.game-launcher');
+    const gameIcon = document.querySelector('.game-thumbnail');
+    const gameAreaContainer = document.querySelector('.game-area-container');
+    
+    // Animation constants
+    const ANIMATION = {
+        ZOOM_DURATION: 1500,  // 1.5 seconds for zoom
+        FADE_DURATION: 800,   // 0.8 seconds for fade
+        MAX_ZOOM: 8           // Maximum zoom factor
+    };
     
     // Game variables - similar to desktop version
     let ctx;
@@ -38,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let difficultyLevel = 1;
     let colorTransitionProgress = 0;
     let colorTransitionDirection = 0;
+    let animationInProgress = false;
     
     // Color definitions - copied from desktop version
     const normalGridColor = 'rgba(0, 255, 255, 0.7)';
@@ -58,30 +69,94 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Game launcher
     playButton.addEventListener('click', function() {
-        gameContainer.style.display = 'block';
+        if (animationInProgress) return;
         
-        // Try to lock screen orientation for gameplay
-        if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(function() {
-                console.log('Orientation lock not supported');
-            });
-        }
+        animationInProgress = true;
         
-        // Initialize game
-        initGame();
+        // Start the zoom animation on the game icon
+        const iconRect = gameIcon.getBoundingClientRect();
+        const centerX = iconRect.left + iconRect.width / 2;
+        const centerY = iconRect.top + iconRect.height / 2;
+        
+        // Create a cloned version of the icon for the zoom effect
+        const zoomIcon = gameIcon.cloneNode(true);
+        zoomIcon.style.position = 'fixed';
+        zoomIcon.style.left = `${iconRect.left}px`;
+        zoomIcon.style.top = `${iconRect.top}px`;
+        zoomIcon.style.width = `${iconRect.width}px`;
+        zoomIcon.style.height = `${iconRect.height}px`;
+        zoomIcon.style.zIndex = '9999';
+        zoomIcon.style.transition = `transform ${ANIMATION.ZOOM_DURATION}ms ease-in-out, opacity ${ANIMATION.FADE_DURATION}ms ease-in-out`;
+        zoomIcon.style.transformOrigin = 'center center';
+        zoomIcon.classList.add('zoom-clone');
+        document.body.appendChild(zoomIcon);
+        
+        // Hide the play button
+        playButton.style.opacity = '0';
+        playButton.style.pointerEvents = 'none';
+        
+        // First frame to trigger transition
+        setTimeout(() => {
+            zoomIcon.style.transform = `scale(${ANIMATION.MAX_ZOOM})`;
+            zoomIcon.style.opacity = '0';
+        }, 50);
+        
+        // When zoom animation completes
+        setTimeout(() => {
+            // Remove the zoomed icon
+            document.body.removeChild(zoomIcon);
+            
+            // Display game container
+            gameContainer.style.display = 'block';
+            gameContainer.style.opacity = '0';
+            
+            // Fade in the game container
+            setTimeout(() => {
+                gameContainer.style.transition = `opacity ${ANIMATION.FADE_DURATION}ms ease-in-out`;
+                gameContainer.style.opacity = '1';
+                
+                // Hide the launcher container after fade completes
+                setTimeout(() => {
+                    gameAreaContainer.style.visibility = 'hidden';
+                    
+                    // Complete the setup
+                    animationInProgress = false;
+                    
+                    // Try to lock screen orientation for gameplay
+                    if (screen.orientation && screen.orientation.lock) {
+                        screen.orientation.lock('landscape').catch(function() {
+                            console.log('Orientation lock not supported');
+                        });
+                    }
+                    
+                    // Initialize game
+                    initGame();
+                }, ANIMATION.FADE_DURATION);
+            }, 50);
+        }, ANIMATION.ZOOM_DURATION);
     });
     
     // Close button for game container
     closeButton.addEventListener('click', function() {
-        gameContainer.style.display = 'none';
+        // Reset visibility of game launcher
+        gameAreaContainer.style.visibility = 'visible';
+        playButton.style.opacity = '1';
+        playButton.style.pointerEvents = 'auto';
         
-        // Clean up game resources
-        cancelAnimationFrame(frameID);
+        // Hide the game container with fade effect
+        gameContainer.style.opacity = '0';
         
-        // Unlock screen orientation
-        if (screen.orientation && screen.orientation.unlock) {
-            screen.orientation.unlock();
-        }
+        setTimeout(() => {
+            gameContainer.style.display = 'none';
+            
+            // Clean up game resources
+            cancelAnimationFrame(frameID);
+            
+            // Unlock screen orientation
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+        }, ANIMATION.FADE_DURATION);
     });
     
     // Restart button
@@ -148,14 +223,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function initGame() {
         // Set up canvas
         ctx = mobileCanvas.getContext('2d');
+        
+        // Make sure the canvas is properly sized
         resizeCanvas();
         
-        // Create player
+        // Create player with proportions based on canvas size
         player = {
             width: canvasWidth * 0.07,
             height: canvasWidth * 0.07,
             x: canvasWidth * 0.2,
-            y: canvasHeight - (canvasWidth * 0.07),
+            y: canvasHeight - (canvasWidth * 0.07) - 10, // Add small gap from bottom
             velY: 0,
             isJumping: false,
             jumpPower: 15,
@@ -175,11 +252,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function handleResize() {
+        // Store old dimensions to calculate ratio
+        const oldWidth = canvasWidth;
+        const oldHeight = canvasHeight;
+        
+        // Resize the canvas
         resizeCanvas();
         
         // Adjust player position after resize
-        if (!gameStarted) {
-            player.y = canvasHeight - player.height;
+        if (player) {
+            const widthRatio = canvasWidth / oldWidth;
+            player.width *= widthRatio;
+            player.height *= widthRatio;
+            player.x *= widthRatio;
+            
+            if (!gameStarted) {
+                player.y = canvasHeight - player.height - 10; // Add small gap from bottom
+            } else {
+                player.y *= canvasHeight / oldHeight;
+            }
         }
     }
     
@@ -200,17 +291,33 @@ document.addEventListener('DOMContentLoaded', function() {
         canvasWidth = mobileCanvas.width;
         canvasHeight = mobileCanvas.height;
         
-        // Scale context to account for pixel ratio
+        // Reset the context scaling
+        ctx = mobileCanvas.getContext('2d');
         ctx.scale(devicePixelRatio, devicePixelRatio);
     }
     
     function startGame() {
+        if (isGameOver) {
+            resetGame();
+        }
+        
         gameStarted = true;
         isGameOver = false;
         mobileGameOver.style.display = 'none';
         
+        // Make sure player is at correct starting position
+        if (player) {
+            player.y = canvasHeight - player.height - 10;
+            player.velY = 0;
+            player.isJumping = false;
+            player.jumpCount = 0;
+        }
+        
         // Start game loop
-        gameLoop();
+        if (frameID) {
+            cancelAnimationFrame(frameID);
+        }
+        frameID = requestAnimationFrame(gameLoop);
     }
     
     function gameLoop() {

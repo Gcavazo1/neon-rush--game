@@ -81,6 +81,7 @@ body {
     background: url('../assets/cutom-handheldBG.png') no-repeat center top;
     background-size: contain; /* Keep the image in its aspect ratio */
     background-color: #000; /* Black background */
+    transition: visibility 0.1s ease-in-out;
 }
 
 main {
@@ -88,7 +89,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 520px; /* Push content below the fixed game area */
+    padding-top: 1px;/* Push content below the fixed game area */
     position: relative;
     z-index: 1;
     overflow-x: hidden;
@@ -146,7 +147,7 @@ header h1 {
     max-width: 400px;
     left: 50%;
     transform: translateX(-50%);
-    top: 160px; /* Position within the game area */
+    top: 94px; /* Position within the game area */
     text-align: center;
     pointer-events: none; /* Prevent interaction with container */
     z-index: 5;
@@ -154,15 +155,16 @@ header h1 {
 
 .game-thumbnail {
     width: 100%;
-    max-width: 160px;
+    max-width: 90px;
     display: block;
     margin: 0 auto 20px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(7, 232, 232, 0.756);
+    transition: transform 0.3s ease-in-out;
 }
 
 .play-button {
-    padding: 15px 1%;
+    padding: 15px 30%;
     font-size: 0.80rem;
     font-family: 'ArcadeClassic', 'Arial', sans-serif;
     background: rgba(0, 0, 0, 0.7);
@@ -174,10 +176,11 @@ header h1 {
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-top: 128px;
-    margin-left: 135px;
+    margin-top: 175px;
+    margin-left: 27px;
     display: block;
     pointer-events: auto; /* Allow interaction with the button */
+    transition: opacity 0.5s ease-in-out;
 }
 
 /* ==========================================================================
@@ -250,6 +253,19 @@ header h1 {
     background: #000;
     z-index: 1000;
     display: none;
+    opacity: 1;
+    transition: opacity 0.8s ease-in-out;
+}
+
+/* Game Transitions */
+.game-thumbnail:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(7, 232, 232, 0.9), 0 0 35px rgba(7, 232, 232, 0.5);
+}
+
+/* Glow effect for zoomed clone */
+.zoom-clone {
+    box-shadow: 0 0 40px rgba(7, 232, 232, 0.9), 0 0 80px rgba(7, 232, 232, 0.7);
 }
 
 .close-game {
@@ -269,6 +285,12 @@ header h1 {
     align-items: center;
     box-shadow: 0 0 10px var(--neon-cyan);
     cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.close-game:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--neon-cyan), 0 0 25px var(--neon-cyan);
 }
 
 #mobile-game-canvas {
@@ -335,7 +357,7 @@ footer {
     padding: 15px 0;
     position: relative;
     z-index: 10;
-    margin-top: 20px; /* Reduced margin since we're using padding-top on main */
+    margin: 20px auto; /* Reduced margin since we're using padding-top on main */
 }
 
 /* Move collapsible styles to the footer section */
