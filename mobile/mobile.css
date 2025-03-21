@@ -65,14 +65,22 @@ body {
     font-family: 'Arial', sans-serif;
     color: #fff;
     min-height: 100vh;
-    background: url('../assets/cutom-handheldBG.png') no-repeat center center fixed;
-    background-size: cover;
-    background-attachment: fixed;
+    background: #000; /* Solid black background for the entire page */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     position: relative;
     width: 100%;
+}
+
+/* Game area with fixed background */
+.game-area-container {
+    position: relative;
+    height: 500px; /* Fixed height for the game area */
+    width: 100%;
+    overflow: hidden;
+    background: url('../assets/cutom-handheldBG.png') no-repeat center top;
+    background-size: contain; /* Keep the image in its aspect ratio */
+    background-color: #000; /* Black background */
 }
 
 main {
@@ -80,11 +88,10 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 20px;
+    padding-top: 520px; /* Push content below the fixed game area */
     position: relative;
     z-index: 1;
     overflow-x: hidden;
-    min-height: 500px;
 }
 
 /* Content container - if you need scrollable content */
@@ -134,19 +141,14 @@ header h1 {
    5. Game Launcher
    ========================================================================== */
 .game-launcher {
-    position: fixed;
-    width: 100%;
+    position: absolute; /* Absolute within the game-area-container */
+    width: 90%;
     max-width: 400px;
     left: 50%;
     transform: translateX(-50%);
-    top: 120px;
+    top: 160px; /* Position within the game area */
     text-align: center;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 0 00px rgba(0, 255, 255, 0.7);
-    background: rgba(0, 0, 0, 0);
-    padding: 20px;
-    pointer-events: none;
+    pointer-events: none; /* Prevent interaction with container */
     z-index: 5;
 }
 
@@ -173,9 +175,9 @@ header h1 {
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-top: 128px;
-    margin-left: 115px;
+    margin-left: 135px;
     display: block;
-    pointer-events: auto;
+    pointer-events: auto; /* Allow interaction with the button */
 }
 
 /* ==========================================================================
@@ -327,13 +329,13 @@ header h1 {
    8. Footer
    ========================================================================== */
 footer {
-    margin-top: 300px;
     width: 100%;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.7);
     padding: 15px 0;
     position: relative;
     z-index: 10;
+    margin-top: 20px; /* Reduced margin since we're using padding-top on main */
 }
 
 /* Move collapsible styles to the footer section */
@@ -409,40 +411,32 @@ footer .collapsible-header h3 {
    9. Media Queries
    ========================================================================== */
 @media (max-height: 600px) {
-    body {
-        overflow-y: auto;
+    .game-area-container {
+        height: 400px; /* Smaller height for small screens */
     }
     
     main {
-        min-height: 400px;
+        padding-top: 420px; /* Adjust based on game area container height */
     }
     
     .game-launcher {
-        top: 100px;
+        top: 100px; /* Move up on smaller screens */
     }
     
     header h1 {
         font-size: 2em;
     }
-    
-    footer {
-        margin-top: 200px;
-    }
-    
-    .collapsible {
-        margin: 10px auto;
-    }
-    
-    footer {
-        padding: 5px 0;
-    }
-    
-    .music-credit {
-        font-size: 0.9rem;
-    }
 }
 
 @media (min-width: 768px) {
+    .game-area-container {
+        height: 600px; /* Larger for bigger screens */
+    }
+    
+    main {
+        padding-top: 620px; /* Adjust based on game area container height */
+    }
+    
     .play-button {
         font-size: 1.5rem;
         padding: 20px 40px;
