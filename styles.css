@@ -1,12 +1,28 @@
-/* ============================
-   CUSTOM FONTS
-   ============================ */
+/* ==========================================================================
+   NEON RUSH - Main Stylesheet
+   
+   Table of Contents:
+   1. Custom Fonts
+   2. Variables & Animations
+   3. Base & Layout
+   4. Header
+   5. Game Device & Reflection
+   6. Game Screen Elements
+   7. Game UI
+   8. Footer
+   9. Media Queries
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Custom Fonts
+   ========================================================================== */
 @font-face {
     font-family: 'NeonWorld';
     src: url('assets/fonts/NEON\ WORLD\ DEMO.ttf') format('truetype'),
          url('assets/fonts/NEON\ WORLD\ DEMO.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap; /* Improve font loading performance */
 }
 
 @font-face {
@@ -14,43 +30,58 @@
     src: url('assets/fonts/ARCADECLASSIC.TTF') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
-/* ============================
-   SYNTHWAVE PALETTE
-   ============================ */
+/* ==========================================================================
+   2. Variables & Animations
+   ========================================================================== */
 :root {
-    --main-bg-color: hsl(266, 49%, 25%);
-    --grid-color: hsl(319, 100%, 60%);
-    --sun-yellow: hsl(60, 82%, 58%);
-    --sun-orange: hsl(0, 67%, 55%);
-    --sun-pink: hsl(319, 100%, 60%);
-    --mountains-color: hsl(219, 79%, 66%);
-    --text-glow: #0ff;
-    --text-glow-alt: #f0f;
-    --c1: hsl(219, 79%, 66%);
-    --c2: hsl(319, 100%, 60%);
-    --c3: hsl(266, 49%, 25%);
-    --c4: hsl(60, 82%, 58%);
-    --c5: hsl(0, 67%, 55%);
-    --c6: hsl(213, 96%, 11%);
-    --c2hsl: 319, 100%, 60%;
+    /* Core color palette */
+    --neon-cyan: #0ff;
+    --neon-magenta: #f0f;
+    --neon-yellow: #fedb3d;
+    --dark-purple: #170a5e;
+    --darker-purple: #090021;
+    --grid-pink: #e807cb;
+    
+    /* Functional colors */
+    --text-glow: var(--neon-cyan);
+    --text-glow-alt: var(--neon-magenta);
+    --button-color: var(--neon-cyan);
+    --header-color: var(--neon-cyan);
+    --gradient-start: var(--neon-cyan);
+    --gradient-end: var(--neon-magenta);
 }
 
+/* CSS Custom Properties */
 @property --outrun {
-  syntax: "<number>";
-  initial-value: 0;
-  inherits: false;
-  robustness: initial;
+    syntax: "<number>";
+    initial-value: 0;
+    inherits: false;
+    robustness: initial;
 }
 
+/* Animations */
 @keyframes outrun {
-  to { --outrun: 1; }
+    to { --outrun: 1; }
 }
 
-/* ============================
-   BASE STYLES
-   ============================ */
+@keyframes textPulse {
+    0% { opacity: 0.8; filter: brightness(0.8); }
+    50% { opacity: 1; filter: brightness(1.2); }
+    100% { opacity: 0.8; filter: brightness(0.8); }
+}
+
+@keyframes buttonGlow {
+    0% { box-shadow: 0 0 5px var(--button-color), 0 0 10px var(--button-color); }
+    50% { box-shadow: 0 0 15px var(--button-color), 0 0 20px var(--button-color); }
+    100% { box-shadow: 0 0 5px var(--button-color), 0 0 10px var(--button-color); }
+}
+
+/* ==========================================================================
+   3. Base & Layout
+   ========================================================================== */
 body {
     margin: 0;
     padding: 0;
@@ -59,23 +90,49 @@ body {
     font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
     color: #fff;
     min-height: 100vh;
-    /* Enhanced synthwave background with more visible retro stripes */
+    
+    /* Enhanced synthwave background with diagonal stripes */
     background: 
-        /* Diagonal retro stripes */
-        linear-gradient(135deg, transparent 20%, transparent 30%, rgba(0, 255, 255, 0.4) 30%, rgba(0, 255, 255, 0.4) 40%, transparent 0%, transparent 60%, rgba(232, 7, 203, 0.4) 60%, rgba(232, 7, 203, 0.4) 70%, transparent 70%, transparent 90%, rgba(254, 219, 61, 0.4) 90%, rgba(254, 219, 61, 0.4) 100%),
-        /* Base synthwave gradient */
-        radial-gradient(circle at center, #5e0a51 0%, #090021 70%);
+        linear-gradient(135deg, 
+            transparent 0%, 
+            transparent 30%, 
+            rgba(0, 255, 255, 0.4) 30%, 
+            rgba(0, 255, 255, 0.4) 40%, 
+            transparent 40%, 
+            transparent 60%, 
+            rgba(232, 7, 203, 0.4) 60%, 
+            rgba(232, 7, 203, 0.4) 70%, 
+            transparent 70%, 
+            transparent 90%, 
+            rgba(254, 219, 61, 0.4) 90%, 
+            rgba(254, 219, 61, 0.4) 100%),
+        radial-gradient(circle at center, var(--dark-purple) 0%, var(--darker-purple) 70%);
     background-size: 100% 100%;
     background-position: 0% 0%;
+    
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
 }
 
-/* ============================
-   HEADER STYLES
-   ============================ */
+/* Common glow line style */
+.glow-line {
+    height: 2px;
+    background: linear-gradient(to right, 
+        transparent, 
+        var(--gradient-start), 
+        var(--gradient-end), 
+        var(--gradient-start), 
+        transparent);
+    margin: 10px auto;
+    width: 80%;
+    box-shadow: 0 0 10px var(--gradient-start), 0 0 20px var(--gradient-end);
+}
+
+/* ==========================================================================
+   4. Header
+   ========================================================================== */
 header {
     width: 100%;
     text-align: center;
@@ -91,7 +148,7 @@ header h1 {
     font-size: 4em;
     margin: 0;
     color: transparent;
-    background: linear-gradient(to right, #0ff, #f0f);
+    background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
     -webkit-background-clip: text;
     background-clip: text;
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.5);
@@ -99,17 +156,9 @@ header h1 {
     animation: textPulse 3s infinite;
 }
 
-.glow-line {
-    height: 2px;
-    background: linear-gradient(to right, transparent, #0ff, #f0f, #0ff, transparent);
-    margin: 10px auto;
-    width: 80%;
-    box-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
-}
-
-/* ============================
-   DEVICE CONTAINER & REFLECTION
-   ============================ */
+/* ==========================================================================
+   5. Game Device & Reflection
+   ========================================================================== */
 #reflection-container {
     position: relative;
     display: flex;
@@ -117,6 +166,7 @@ header h1 {
     align-items: center;
 }
 
+/* Device container */
 #device-container {
     position: relative;
     width: 800px;
@@ -136,6 +186,7 @@ header h1 {
     z-index: 1;
 }
 
+/* Reflection element */
 #device-reflection {
     position: relative;
     width: 800px;
@@ -163,11 +214,11 @@ header h1 {
     filter: blur(1px) brightness(0.5);
 }
 
-/* Adjust the additional fade effect specifically for the bottom edge */
+/* Bottom fade for reflection */
 #device-reflection::after {
     content: "";
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     left: 0;
     width: 100%;
     height: 80px;
@@ -175,19 +226,7 @@ header h1 {
     pointer-events: none;
 }
 
-/* Reflection effects */
-#reflection-container::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    background: radial-gradient(ellipse at center, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.05) 40%, transparent 80%);
-    z-index: 0;
-    pointer-events: none;
-}
-
+/* Reflection floor effect */
 #reflection-container::before {
     content: "";
     position: absolute;
@@ -203,9 +242,45 @@ header h1 {
     opacity: 0.3;
 }
 
-/* ============================
-   GAME SCREEN AREA
-   ============================ */
+/* Glowing floor */
+#reflection-container::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: radial-gradient(
+        ellipse at center, 
+        rgba(0, 255, 255, 0.05) 0%, 
+        rgba(255, 0, 255, 0.05) 40%, 
+        transparent 80%
+    );
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Horizontal glow lines in reflection */
+.glow-line-horizontal {
+    position: absolute;
+    height: 1px;
+    left: 0;
+    right: 0;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(0, 255, 255, 0.3),
+        rgba(255, 0, 255, 0.3),
+        rgba(0, 255, 255, 0.3),
+        transparent
+    );
+    z-index: 2;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+/* ==========================================================================
+   6. Game Screen Elements
+   ========================================================================== */
 #screen-area {
     position: absolute;
     top: 20.2%;
@@ -217,8 +292,8 @@ header h1 {
     background-color: #000;
     z-index: 2;
     box-shadow: 
-        inset 0 0 10px #0ff,
-        0 0 15px #0ff,
+        inset 0 0 10px var(--neon-cyan),
+        0 0 15px var(--neon-cyan),
         0 0 25px rgba(0, 255, 255, 0.5);
     border: 1px solid rgba(0, 255, 255, 0.8);
 }
@@ -229,19 +304,19 @@ header h1 {
     position: relative;
 }
 
-/* We're removing the CSS-based grid, sun, and mountains since they're now drawn in JavaScript */
-
-/* ============================
-   GAME UI ELEMENTS
-   ============================ */
+/* ==========================================================================
+   7. Game UI
+   ========================================================================== */
 #score-display {
     position: absolute;
     top: 10px;
     left: 10px;
-    color: #0ff;
+    color: var(--neon-cyan);
     font-family: 'ArcadeClassic', monospace;
-    font-size: 2em;
-    text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+    font-size: 1.5em;
+    text-shadow: 
+        0 0 5px var(--neon-cyan), 
+        0 0 10px var(--neon-cyan);
     z-index: 100;
     letter-spacing: 4px;
     text-transform: uppercase;
@@ -265,7 +340,12 @@ header h1 {
     min-width: 250px;
 }
 
-#game-over h2 {
+.game-over-content {
+    width: 100%;
+    text-align: center;
+}
+
+#game-over h1 {
     margin-top: 0;
     font-family: 'ArcadeClassic', monospace;
     text-shadow: 0 0 8px #0ff, 0 0 15px #f0f;
@@ -273,6 +353,7 @@ header h1 {
     font-size: 2.5em;
     margin-bottom: 20px;
     text-transform: uppercase;
+    color: #0ff;
 }
 
 #final-score {
@@ -336,52 +417,34 @@ header h1 {
     100% { transform: rotate(45deg) translate(100%, 100%); }
 }
 
-/* ============================
-   GAME VISUAL ELEMENTS
-   ============================ */
-.player {
-    filter: drop-shadow(0 0 5px #0ff);
+@keyframes borderPulse {
+    0%, 100% {
+        border-color: #0ff;
+        box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+    }
+    50% {
+        border-color: #f0f;
+        box-shadow: 0 0 10px #f0f, 0 0 20px #f0f;
+    }
 }
 
-.obstacle {
-    filter: drop-shadow(0 0 5px #f0f);
-}
-
-.ground-obstacle {
-    background: linear-gradient(135deg, #f0f, #90f);
-}
-
-.air-obstacle {
-    background: linear-gradient(135deg, #0ff, #00f);
-}
-
-.particle {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: #0ff;
-    border-radius: 50%;
-    filter: blur(1px);
-    pointer-events: none;
-}
-
-/* ============================
-   FOOTER STYLES
-   ============================ */
+/* ==========================================================================
+   8. Footer
+   ========================================================================== */
 footer {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    margin-top: 30px;
     padding: 20px 0;
+    margin-top: 40px;
     text-align: center;
     position: relative;
     z-index: 10;
-    border-top: 1px solid rgba(0, 255, 255, 0.2);
 }
 
 .footer-content {
     display: flex;
     justify-content: space-around;
+    align-items: flex-start;
     flex-wrap: wrap;
     max-width: 1200px;
     margin: 0 auto;
@@ -389,43 +452,43 @@ footer {
 }
 
 .instructions {
-    margin: 10px;
     text-align: left;
+    margin: 10px;
 }
 
 .instructions h3 {
-    color: #0ff;
-    font-family: 'NeonWorld', 'Courier New', monospace;
-    text-shadow: 0 0 5px #0ff;
-    margin-bottom: 10px;
-    font-size: 1.5em;
+    color: var(--neon-cyan);
+    font-family: 'ArcadeClassic', monospace;
+    font-size: 1.8em;
+    text-shadow: 0 0 5px var(--neon-cyan);
     letter-spacing: 2px;
+    margin-bottom: 10px;
 }
 
 .instructions p {
+    font-size: 1em;
+    line-height: 1.5;
     margin: 5px 0;
-    font-family: 'Courier New', monospace;
 }
 
 .key {
-    background-color: rgba(0, 255, 255, 0.2);
-    border: 1px solid #0ff;
-    padding: 2px 8px;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--neon-cyan);
     border-radius: 4px;
-    font-weight: bold;
-    box-shadow: 0 0 5px #0ff;
-    font-family: 'NeonWorld', 'Courier New', monospace;
-    letter-spacing: 1px;
+    padding: 2px 8px;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 3px var(--neon-cyan);
+    box-shadow: 0 0 5px var(--neon-cyan);
 }
 
 .credits {
-    margin: 10px;
     text-align: right;
-    color: #aaa;
-    font-size: 0.9em;
+    margin: 10px;
 }
 
 .credits p {
+    font-size: 0.9em;
     margin: 5px 0;
 }
 
@@ -439,106 +502,121 @@ footer {
 }
 
 .spotify-credit p {
-    color: #0ff;
+    color: var(--neon-cyan);
     font-size: 14px;
     margin-bottom: 10px;
-    text-shadow: 0 0 5px #0ff;
+    text-shadow: 0 0 5px var(--neon-cyan);
 }
 
-/* ============================
-   ANIMATIONS
-   ============================ */
-@keyframes textPulse {
-    0%, 100% {
-        filter: brightness(1);
-        letter-spacing: 5px;
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.5);
-    }
-    50% {
-        filter: brightness(1.5);
-        letter-spacing: 6px;
-        text-shadow: 0 0 15px rgba(0, 255, 255, 0.7), 0 0 30px rgba(255, 0, 255, 0.7);
-    }
+.spotify-embed {
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto 0;
+    padding: 0 20px;
+    text-align: center;
 }
 
-@keyframes borderPulse {
-    0%, 100% {
-        border-color: #0ff;
-        box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
-    }
-    50% {
-        border-color: #f0f;
-        box-shadow: 0 0 10px #f0f, 0 0 20px #f0f;
-    }
+.music-credit {
+    color: var(--neon-cyan);
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px var(--neon-cyan);
+    font-family: 'ArcadeClassic', monospace;
+    letter-spacing: 2px;
 }
 
-@keyframes lineMove {
-    0% {
-        transform: perspective(800px) rotateX(60deg) translateZ(0);
-        opacity: 0;
-    }
-    20% {
-        opacity: 0.3;
-    }
-    80% {
-        opacity: 0.3;
-    }
-    100% {
-        transform: perspective(800px) rotateX(60deg) translateZ(50px);
-        opacity: 0;
-    }
+.spotify-embed iframe {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    transition: box-shadow 0.3s ease;
 }
 
-@keyframes gridMove {
-    from {
-        background-position: 0 0;
-    }
-    to {
-        background-position: 40px 40px;
-    }
+.spotify-embed iframe:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
 }
 
-/* ============================
-   RESPONSIVE STYLES
-   ============================ */
+/* ==========================================================================
+   9. Media Queries
+   ========================================================================== */
 @media (max-width: 1200px) {
     #device-container, #device-reflection {
-        width: 700px;
+        width: 600px;
     }
     #device-container {
-        height: 840px;
+        height: 700px;
     }
     #reflection-image {
-        height: 860px;
+        height: 700px;
     }
 }
 
 @media (max-width: 768px) {
     #device-container, #device-reflection {
-        width: 600px;
+        width: 450px;
     }
     #device-container {
-        height: 720px;
+        height: 525px;
     }
     #reflection-image {
-        height: 720px;
+        height: 525px;
     }
     #device-reflection {
-        height: 300px;
+        height: 400px;
+    }
+    
+    header h1 {
+        font-size: 2.5em;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .instructions, .credits {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .spotify-embed {
+        padding: 0 15px;
     }
 }
 
 @media (max-width: 480px) {
     #device-container, #device-reflection {
-        width: 400px;
+        width: 300px;
     }
     #device-container {
-        height: 480px;
+        height: 350px;
     }
     #reflection-image {
-        height: 480px;
+        height: 350px;
     }
     #device-reflection {
-        height: 200px;
+        height: 300px;
+    }
+    
+    header h1 {
+        font-size: 2.5em;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .instructions, .credits {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .spotify-embed {
+        padding: 0 10px;
+    }
+    .music-credit {
+        font-size: 0.9em;
     }
 }
