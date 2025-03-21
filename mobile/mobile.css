@@ -59,16 +59,21 @@
 body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow: hidden;
     touch-action: manipulation;
     font-family: 'Arial', sans-serif;
     color: #fff;
-    min-height: 100vh;
+    height: 100vh;
     background: url('../assets/cutom-handheldBG.png') no-repeat center center fixed;
     background-size: cover;
+    background-attachment: fixed;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
 }
 
 main {
@@ -79,6 +84,17 @@ main {
     padding: 0 20px;
     position: relative;
     z-index: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    height: calc(100vh - 150px);
+}
+
+/* Content container - if you need scrollable content */
+.scrollable-content {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    flex: 1;
 }
 
 /* Common glow line style */
@@ -121,40 +137,41 @@ header h1 {
    ========================================================================== */
 .game-launcher {
     position: relative;
-    width: 90%;
+    width: 100%;
     max-width: 400px;
-    margin: 20px auto;
+    margin-top: 40px;
     text-align: center;
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
-    background: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 00px rgba(0, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0);
     padding: 20px;
 }
 
 .game-thumbnail {
-    width: 85%;
-    max-width: 300px;
+    width: 100%;
+    max-width: 160px;
     display: block;
     margin: 0 auto 20px;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(232, 7, 203, 0.6);
+    box-shadow: 0 0 25px rgba(7, 232, 232, 0.756);
 }
 
 .play-button {
-    padding: 15px 30px;
-    font-size: 1.2rem;
+    padding: 15px 1%;
+    font-size: 0.80rem;
     font-family: 'ArcadeClassic', 'Arial', sans-serif;
     background: rgba(0, 0, 0, 0.7);
-    border: 2px solid var(--neon-cyan);
-    color: var(--neon-cyan);
+    border: 2px solid var(--neon-magenta);
+    color: var(--neon-magenta);
     border-radius: 30px;
-    box-shadow: 0 0 10px var(--neon-cyan);
+    box-shadow: 0 0 10px var(--neon-magenta);
     animation: buttonGlow 2s infinite;
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin: 0 auto;
+    margin-top: 128px;
+    margin-left: 115px;
     display: block;
 }
 
@@ -388,6 +405,16 @@ footer .collapsible-header h3 {
    9. Media Queries
    ========================================================================== */
 @media (max-height: 600px) {
+    body {
+        overflow: auto;
+        position: relative;
+    }
+    
+    main {
+        height: auto;
+        min-height: 300px;
+    }
+    
     header h1 {
         font-size: 2em;
     }
