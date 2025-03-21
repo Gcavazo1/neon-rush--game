@@ -59,21 +59,20 @@
 body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     touch-action: manipulation;
     font-family: 'Arial', sans-serif;
     color: #fff;
-    height: 100vh;
+    min-height: 100vh;
     background: url('../assets/cutom-handheldBG.png') no-repeat center center fixed;
     background-size: cover;
     background-attachment: fixed;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: fixed;
+    position: relative;
     width: 100%;
-    top: 0;
-    left: 0;
 }
 
 main {
@@ -84,9 +83,8 @@ main {
     padding: 0 20px;
     position: relative;
     z-index: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    height: calc(100vh - 150px);
+    overflow-x: hidden;
+    min-height: 500px;
 }
 
 /* Content container - if you need scrollable content */
@@ -136,16 +134,20 @@ header h1 {
    5. Game Launcher
    ========================================================================== */
 .game-launcher {
-    position: relative;
+    position: fixed;
     width: 100%;
     max-width: 400px;
-    margin-top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 120px;
     text-align: center;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 00px rgba(0, 255, 255, 0.7);
     background: rgba(0, 0, 0, 0);
     padding: 20px;
+    pointer-events: none;
+    z-index: 5;
 }
 
 .game-thumbnail {
@@ -173,6 +175,7 @@ header h1 {
     margin-top: 128px;
     margin-left: 115px;
     display: block;
+    pointer-events: auto;
 }
 
 /* ==========================================================================
@@ -324,6 +327,7 @@ header h1 {
    8. Footer
    ========================================================================== */
 footer {
+    margin-top: 300px;
     width: 100%;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.7);
@@ -406,21 +410,23 @@ footer .collapsible-header h3 {
    ========================================================================== */
 @media (max-height: 600px) {
     body {
-        overflow: auto;
-        position: relative;
+        overflow-y: auto;
     }
     
     main {
-        height: auto;
-        min-height: 300px;
+        min-height: 400px;
+    }
+    
+    .game-launcher {
+        top: 100px;
     }
     
     header h1 {
         font-size: 2em;
     }
     
-    .game-launcher {
-        margin: 10px auto;
+    footer {
+        margin-top: 200px;
     }
     
     .collapsible {
@@ -444,5 +450,9 @@ footer .collapsible-header h3 {
     
     header h1 {
         font-size: 3em;
+    }
+    
+    .game-launcher {
+        max-width: 500px;
     }
 } 
