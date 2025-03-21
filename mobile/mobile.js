@@ -272,8 +272,8 @@ let lastScore = 0;
 let speed = 5;
 let baseSpeed = 5;
     let obstacles = [];
-let obstacleInterval = 1500;
-let baseObstacleInterval = 1500;
+let obstacleInterval = 1800;
+let baseObstacleInterval = 1800;
     let lastObstacleTime = 0;
 let particles = [];
 let animationId;
@@ -1425,8 +1425,8 @@ function resetGame() {
     particles.length = 0;
     speed = 5;
     baseSpeed = 5;
-    obstacleInterval = 1500;
-    baseObstacleInterval = 1500;
+    obstacleInterval = 1800;
+    baseObstacleInterval = 1800;
     
     // Reset player state
     player.y = canvas.height - player.height;
@@ -1586,7 +1586,7 @@ function startSpeedRush() {
     const oldInterval = obstacleInterval;
     
     // Temporarily increase speed and reduce obstacle interval - but more subtly
-    speed = baseSpeed * 1.025; // Smaller multiplier (was 1.03)
+    speed = baseSpeed * 1.02; // Smaller multiplier (was 1.03)
     obstacleInterval = baseObstacleInterval * 0.7; // Less aggressive reduction (was 0.6)
     scoreMultiplier = 2;
     
