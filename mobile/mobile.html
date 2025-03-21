@@ -2,12 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Neon Rush Mobile</title>
     <link rel="stylesheet" href="mobile.css">
-    <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
+    
+    <!-- Favicon configuration -->
+    <link rel="apple-touch-icon" sizes="57x57" href="../assets/favicons/favicon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../assets/favicons/favicon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../assets/favicons/favicon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/favicons/favicon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../assets/favicons/favicon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../assets/favicons/favicon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../assets/favicons/favicon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../assets/favicons/favicon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicons/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#0ff">
+    <meta name="msapplication-TileImage" content="../assets/favicons/favicon-144x144.png">
+    <meta name="theme-color" content="#0ff">
+    
+    <!-- Add Google Fonts for reliable web fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* Use font-display: swap to handle missing fonts gracefully */
+        @font-face {
+            font-family: 'ArcadeClassic';
+            src: url('../assets/fonts/ARCADECLASSIC.TTF') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Provide multiple paths for NeonWorld font */
+        @font-face {
+            font-family: 'NeonWorld';
+            src: url('../assets/fonts/NeonWorld.ttf') format('truetype'),
+                 url('../assets/fonts/NEON WORLD DEMO.ttf') format('truetype'),
+                 url('../assets/fonts/NEON\ WORLD\ DEMO.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        /* Fallback styles if fonts don't load */
+        h1, .arcade-text {
+            font-family: 'NeonWorld', 'Press Start 2P', 'Arial', sans-serif;
+        }
+        
+        .score, .game-text {
+            font-family: 'ArcadeClassic', 'Press Start 2P', monospace;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -32,6 +85,13 @@
                 <h2>GAME OVER!</h2>
                 <div id="mobile-final-score">YOUR SCORE: 0</div>
                 <button id="mobile-restart-btn">PLAY AGAIN</button>
+            </div>
+            
+            <!-- Orientation message for mobile devices -->
+            <div class="orientation-message">
+                <h2>ROTATE DEVICE TO LANDSCAPE</h2>
+                <div class="rotate-icon">⟳</div>
+                <p>This game is designed for landscape orientation for the best experience.</p>
             </div>
         </div>
     </main>

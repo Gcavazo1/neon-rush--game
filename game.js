@@ -24,6 +24,10 @@ const scoreDisplay = document.getElementById('score-display');
 const gameOverScreen = document.getElementById('game-over');
 const finalScore = document.getElementById('final-score');
 const restartBtn = document.getElementById('restart-btn');
+const speakerRipple = document.getElementById('speaker-ripple');
+
+// Debug log
+console.log("Speaker ripple element found:", speakerRipple);
 
 // Game start state
 let gameStarted = false;
@@ -184,14 +188,14 @@ function generatePalmTrees() {
     palmTrees.length = 0;
     
     // Create palm trees on left side
-    for (let i = 0; i < 2; i++) {
-        const x = canvas.width * (0.05 + i * 0.20);
+    for (let i = 0; i < 3; i++) {
+        const x = canvas.width * (0.05 + i * 0.15);
         const height = canvas.height * (0.20 + Math.random() * -0.03);
         palmTrees.push({
             x,
             height,
             width: height * 0.2,
-            leanDirection: 0.2 + Math.random() * 0.1, // Lean right
+            leanDirection: 0.2 + Math.random() * 0.5, // Lean right
             fronds: 5 + Math.floor(Math.random() * 3),
             color: '#270045',
             outlineColor: 'rgba(0, 0, 0, 0.7)'
@@ -200,7 +204,7 @@ function generatePalmTrees() {
     
     // Create palm trees on right side
     for (let i = 0; i < 2; i++) {
-        const x = canvas.width * (0.8 + i * 0.20);
+        const x = canvas.width * (0.68 + i * 0.20);
         const height = canvas.height * (0.20 + Math.random() * -0.03);
         palmTrees.push({
             x,
@@ -353,7 +357,7 @@ const player = {
             
             // Outer cyan trail
             ctx.globalAlpha = opacity * 0.3;
-            ctx.fillStyle = 'rgba(0, 255, 255, 0.8)';
+            ctx.fillStyle = 'rgba(238, 255, 0, 0.8)';
             ctx.beginPath();
             ctx.arc(t.x, t.y, size, 0, Math.PI * 2);
             ctx.fill();
@@ -974,7 +978,7 @@ function drawGrid() {
     const horizon = canvas.height * 0.4; // Align with mountains
     const gridRows = 20;
     const gridColumns = 20;
-    const vanishingPointX = canvas.width / 2;
+    const vanishingPointX = canvas.width / 1.7;
     
     // Interpolate grid color based on transition progress
     const currentGridColor = interpolateColor(normalGridColor, rushGridColor, colorTransitionProgress);
@@ -1033,11 +1037,11 @@ function drawGridOverlay() {
         canvas.width / 2, horizon,
         0,
         canvas.width / 2, horizon,
-        canvas.width * 0.6
+        canvas.width * 0.5
     );
     sunReflectionGradient.addColorStop(1, `rgba(${parseInt(reflectionColor.slice(1, 3), 16)}, ${parseInt(reflectionColor.slice(3, 5), 16)}, ${parseInt(reflectionColor.slice(5, 7), 16)}, 0.35)`);
-    sunReflectionGradient.addColorStop(0.5, `rgba(${parseInt(reflectionColorEnd.slice(1, 3), 16)}, ${parseInt(reflectionColorEnd.slice(3, 5), 16)}, ${parseInt(reflectionColorEnd.slice(5, 7), 16)}, 0.15)`);
-    sunReflectionGradient.addColorStop(.32, 'rgba(140, 135, 1, 0.39)');
+    sunReflectionGradient.addColorStop(0.75, `rgba(${parseInt(reflectionColorEnd.slice(1, 3), 16)}, ${parseInt(reflectionColorEnd.slice(3, 5), 16)}, ${parseInt(reflectionColorEnd.slice(5, 7), 16)}, 0.15)`);
+    sunReflectionGradient.addColorStop(.42, 'rgba(82, 79, 0, 0.4)');
     
     ctx.save();
     ctx.fillStyle = sunReflectionGradient;
@@ -1115,6 +1119,11 @@ function startGame() {
     if (!gameStarted) {
         gameStarted = true;
         startMusic();
+        
+        // Activate speaker ripple effect
+        speakerRipple.classList.add('active');
+        console.log("Speaker ripple activated - class added:", speakerRipple.className);
+        
         gameLoop();
     }
 }
@@ -1134,8 +1143,9 @@ function gameOver() {
     // Play game over sound
     playSound(gameOverSound);
     
-    // Pause the music
+    // Pause the music and stop the speaker ripple
     gameMusic.pause();
+    speakerRipple.classList.remove('active');
 }
 
 // Game state reset
@@ -1173,8 +1183,9 @@ function resetGame() {
     colorTransitionProgress = 0;
     colorTransitionDirection = 0;
     
-    // Reset audio
+    // Reset audio and speaker effect
     gameMusic.pause();
+    speakerRipple.classList.remove('active');
     
     // Show start screen
     drawStartScreen();

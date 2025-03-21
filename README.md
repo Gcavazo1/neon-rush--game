@@ -17,16 +17,27 @@ A futuristic, cyberpunk-inspired endless runner game built with pure JavaScript,
 - Speed rush events with 2x point multipliers and visual transformations
 - Particle effects and visual feedback
 - Original soundtrack by B.E.R. - "The Night Begins To Shine (Dragon Remix)"
-- Responsive design that works on various screen sizes
+- Mobile-optimized version with touch controls and landscape orientation
+- Interactive gaming device visualization with speaker animation effects
+- Fullscreen mode for immersive gameplay on mobile devices
+- Smooth animations and transitions throughout the UI
 - Neon glow effects and synthwave color palette
+- Responsive design that works on various screen sizes
 
 ## 🎮 How to Play
 
+### Desktop:
 - **Click** or press **Space** to jump
 - Use **double jumps** to reach higher obstacles
 - Avoid obstacles to earn points
 - Every 50 points triggers a Speed Rush with 2x points and visual transformation
 - Try to achieve the highest score possible!
+
+### Mobile:
+- **Tap** the screen to jump
+- **Rotate** your device to landscape orientation for optimal gameplay
+- Experience immersive fullscreen mode
+- Same exciting gameplay with touch-optimized controls
 
 ## 🎯 Game Mechanics
 
@@ -35,6 +46,7 @@ A futuristic, cyberpunk-inspired endless runner game built with pure JavaScript,
 - Visual feedback for all player actions
 - Smooth color transitions during speed rush events
 - Particle effects for impacts and jumps
+- Automatic device detection and redirection to appropriate version
 
 ## 🚀 Getting Started
 
@@ -56,6 +68,8 @@ Or run locally:
 - HTML5 Canvas for game rendering
 - CSS3 with modern animations and effects
 - Vanilla JavaScript (ES6+)
+- Responsive design for both desktop and mobile devices
+- Mobile-specific optimizations
 - Vercel for deployment
 
 ## 🔮 Future Plans
@@ -63,8 +77,8 @@ Or run locally:
 - User account system
 - Global high score leaderboard
 - Additional power-ups and obstacles
-- Mobile touch controls optimization
 - New game modes and challenges
+- Multi-device progress synchronization
 
 ## 🤝 Contributing
 

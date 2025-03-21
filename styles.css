@@ -298,6 +298,81 @@ header h1 {
     border: 1px solid rgba(0, 255, 255, 0.8);
 }
 
+/* Speaker ripple effect */
+#speaker-ripple {
+    position: absolute;
+    bottom: 28.7%;
+    left: 49.8%;
+    transform: translate(-50%, 0);
+    width: 105px;
+    height: 105px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(246, 255, 0, 0.575) 0%,
+        rgba(240, 0, 255, 0.4) 40%,
+        rgba(0, 255, 255, 0.1) 80%
+    );
+    pointer-events: none;
+    opacity: 1; /* Start invisible */
+    z-index: 10;
+    transition: opacity 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 247, 0, 0.523);
+    border: 1px solid rgba(240, 0, 255, 0.3);
+}
+
+#speaker-ripple.active {
+    opacity: 0.7; /* Subtle visibility when active */
+    animation: speakerRipple 0.9s infinite ease-out;
+}
+
+@keyframes speakerRipple {
+    0% {
+        transform: translate(-50%, 0) scale(0.8);
+        opacity: 0.4;
+        box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+    }
+    25% {
+        opacity: 0.4;
+        box-shadow: 0 0 15px rgba(255, 183, 0, 0.6);
+    }
+    50% {
+        transform: translate(-50%, 0) scale(1.1);
+        opacity: 0.4;
+        box-shadow: 0 0 12px rgba(128, 255, 0, 0.6);
+    }
+    100% {
+        transform: translate(-50%, 0) scale(0.9);
+        opacity: 0.4;
+        box-shadow: 0 0 6px rgba(0, 255, 238, 0.4);
+    }
+}
+
+/* Create a second ripple for more complex effect */
+#speaker-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    background: rgba(240, 0, 255, 0.3);
+    animation: innerRipple 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes innerRipple {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.3;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.15;
+    }
+}
+
 #game-canvas {
     width: 100%;
     height: 100%;
