@@ -1,0 +1,378 @@
+/* ==========================================================================
+   NEON RUSH MOBILE - Main Stylesheet
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Custom Fonts
+   ========================================================================== */
+@font-face {
+    font-family: 'NeonWorld';
+    src: url('../assets/fonts/NEON\ WORLD\ DEMO.ttf') format('truetype'),
+         url('../assets/fonts/NEON\ WORLD\ DEMO.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ArcadeClassic';
+    src: url('../assets/fonts/ARCADECLASSIC.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ==========================================================================
+   2. Variables & Animations
+   ========================================================================== */
+:root {
+    /* Core color palette */
+    --neon-cyan: #0ff;
+    --neon-magenta: #f0f;
+    --neon-yellow: #fedb3d;
+    --dark-purple: #170a5e;
+    --darker-purple: #090021;
+    --grid-pink: #e807cb;
+    
+    /* Functional colors */
+    --text-glow: var(--neon-cyan);
+    --button-color: var(--neon-cyan);
+    --header-color: var(--neon-cyan);
+}
+
+/* Animations */
+@keyframes textPulse {
+    0% { opacity: 0.8; filter: brightness(0.8); }
+    50% { opacity: 1; filter: brightness(1.2); }
+    100% { opacity: 0.8; filter: brightness(0.8); }
+}
+
+@keyframes buttonGlow {
+    0% { box-shadow: 0 0 5px var(--button-color), 0 0 10px var(--button-color); }
+    50% { box-shadow: 0 0 15px var(--button-color), 0 0 20px var(--button-color); }
+    100% { box-shadow: 0 0 5px var(--button-color), 0 0 10px var(--button-color); }
+}
+
+/* ==========================================================================
+   3. Base & Layout
+   ========================================================================== */
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    touch-action: manipulation;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    background: url('../assets/cutom-handheldBG.png') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Common glow line style */
+.glow-line {
+    height: 2px;
+    background: linear-gradient(to right, 
+        transparent, 
+        var(--neon-cyan), 
+        var(--neon-magenta), 
+        var(--neon-cyan), 
+        transparent);
+    margin: 10px auto;
+    width: 90%;
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-magenta);
+}
+
+/* ==========================================================================
+   4. Header
+   ========================================================================== */
+header {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: relative;
+    z-index: 10;
+}
+
+header h1 {
+    font-family: 'NeonWorld', 'Arial', sans-serif;
+    font-size: 2.5em;
+    margin: 0;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+    animation: textPulse 2s infinite;
+}
+
+/* ==========================================================================
+   5. Game Launcher
+   ========================================================================== */
+.game-launcher {
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    margin: 20px auto;
+    text-align: center;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+}
+
+.game-thumbnail {
+    width: 100%;
+    display: block;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    border-radius: 30px;
+    box-shadow: 0 0 10px var(--neon-cyan);
+    animation: buttonGlow 2s infinite;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* ==========================================================================
+   6. Collapsible Sections
+   ========================================================================== */
+.collapsible {
+    width: 90%;
+    max-width: 500px;
+    margin: 15px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+
+.collapsible-header {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border: none;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--neon-cyan);
+    cursor: pointer;
+}
+
+.collapsible-header h3 {
+    margin: 0;
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    letter-spacing: 1px;
+    font-size: 1.2rem;
+}
+
+.toggle-icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.collapsible.active .toggle-icon {
+    transform: rotate(45deg);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 15px;
+}
+
+.collapsible.active .collapsible-content {
+    max-height: 300px;
+}
+
+.collapsible-content p {
+    margin: 10px 0;
+    color: #fff;
+}
+
+/* ==========================================================================
+   7. Game Fullscreen Mode
+   ========================================================================== */
+.game-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 1000;
+    display: none;
+}
+
+.close-game {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--neon-cyan);
+    border-radius: 50%;
+    color: var(--neon-cyan);
+    font-size: 24px;
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px var(--neon-cyan);
+    cursor: pointer;
+}
+
+#mobile-game-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#mobile-score-display {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: var(--neon-cyan);
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+#mobile-game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    display: none;
+}
+
+#mobile-game-over h2 {
+    color: var(--neon-magenta);
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    text-shadow: 0 0 10px var(--neon-magenta);
+    margin-top: 0;
+}
+
+#mobile-final-score {
+    color: var(--neon-yellow);
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    font-size: 1.5rem;
+    margin: 15px 0;
+}
+
+#mobile-restart-btn {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    cursor: pointer;
+    animation: buttonGlow 2s infinite;
+}
+
+/* ==========================================================================
+   8. Footer
+   ========================================================================== */
+footer {
+    width: 100%;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.spotify-embed {
+    margin: 15px auto;
+    width: 90%;
+    max-width: 500px;
+}
+
+.music-credit {
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--neon-cyan);
+    letter-spacing: 1px;
+    margin: 10px 0;
+}
+
+.desktop-link-container {
+    margin: 15px 0;
+}
+
+.desktop-link {
+    display: inline-block;
+    padding: 8px 15px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--neon-magenta);
+    color: var(--neon-magenta);
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    box-shadow: 0 0 8px var(--neon-magenta);
+}
+
+/* ==========================================================================
+   9. Media Queries
+   ========================================================================== */
+@media (max-height: 600px) {
+    header h1 {
+        font-size: 2em;
+    }
+    
+    .game-launcher {
+        margin: 10px auto;
+    }
+    
+    .collapsible {
+        margin: 10px auto;
+    }
+    
+    footer {
+        padding: 5px 0;
+    }
+    
+    .music-credit {
+        font-size: 0.9rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .play-button {
+        font-size: 1.5rem;
+        padding: 20px 40px;
+    }
+    
+    header h1 {
+        font-size: 3em;
+    }
+} 

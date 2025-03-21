@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Neon Rush Mobile</title>
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <h1>Neon Rush</h1>
+        <div class="glow-line"></div>
+    </header>
+    
+    <main>
+        <div class="game-launcher">
+            <img src="../assets/screenshots/Screenshot01.jpg" alt="Neon Rush Game" class="game-thumbnail">
+            <button class="play-button">PLAY GAME</button>
+        </div>
+        
+        <div class="collapsible">
+            <button class="collapsible-header">
+                <h3>How to Play</h3>
+                <span class="toggle-icon">+</span>
+            </button>
+            <div class="collapsible-content">
+                <p>• Tap screen to jump</p>
+                <p>• Double tap to double jump</p>
+                <p>• Avoid obstacles to score points</p>
+                <p>• Every 50 points triggers Speed Rush mode with 2x points</p>
+            </div>
+        </div>
+        
+        <div class="game-fullscreen">
+            <button class="close-game">&times;</button>
+            <canvas id="mobile-game-canvas"></canvas>
+            <div id="mobile-score-display">Score: 0</div>
+            <div id="mobile-game-over">
+                <h2>GAME OVER!</h2>
+                <div id="mobile-final-score">YOUR SCORE: 0</div>
+                <button id="mobile-restart-btn">PLAY AGAIN</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="glow-line"></div>
+        <div class="spotify-embed">
+            <p class="music-credit">Music: B.E.R. - The Night Begins To Shine (Dragon Remix)</p>
+        </div>
+        <div class="desktop-link-container">
+            <a href="../index.html?desktop=true" class="desktop-link">Switch to Desktop Version</a>
+        </div>
+    </footer>
+
+    <script src="mobile.js"></script>
+</body>
+</html> 
