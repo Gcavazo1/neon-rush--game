@@ -122,24 +122,26 @@ header h1 {
 .game-launcher {
     position: relative;
     width: 90%;
-    max-width: 500px;
+    max-width: 400px;
     margin: 20px auto;
     text-align: center;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
 }
 
 .game-thumbnail {
-    width: 100%;
+    width: 85%;
+    max-width: 300px;
     display: block;
+    margin: 0 auto 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(232, 7, 203, 0.6);
 }
 
 .play-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     padding: 15px 30px;
     font-size: 1.2rem;
     font-family: 'ArcadeClassic', 'Arial', sans-serif;
@@ -152,6 +154,8 @@ header h1 {
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 2px;
+    margin: 0 auto;
+    display: block;
 }
 
 /* ==========================================================================
@@ -306,9 +310,40 @@ footer {
     width: 100%;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.7);
-    padding: 10px 0;
+    padding: 15px 0;
     position: relative;
     z-index: 10;
+}
+
+/* Move collapsible styles to the footer section */
+footer .collapsible {
+    width: 90%;
+    max-width: 500px;
+    margin: 15px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+
+footer .collapsible-header {
+    width: 100%;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border: none;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--neon-cyan);
+    cursor: pointer;
+}
+
+footer .collapsible-header h3 {
+    margin: 0;
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    letter-spacing: 1px;
+    font-size: 1.2rem;
 }
 
 .spotify-embed {
@@ -323,6 +358,14 @@ footer {
     text-shadow: 0 0 5px var(--neon-cyan);
     letter-spacing: 1px;
     margin: 10px 0;
+}
+
+.credits {
+    margin: 15px auto;
+    font-family: 'ArcadeClassic', 'Arial', sans-serif;
+    color: var(--neon-magenta);
+    text-shadow: 0 0 5px var(--neon-magenta);
+    letter-spacing: 1px;
 }
 
 .desktop-link-container {
