@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Animation constants
     const ANIMATION = {
-        ZOOM_DURATION: 1500,  // 1.5 seconds for zoom
+        ZOOM_DURATION: 2500,  // 2.5 seconds for zoom (slower)
         FADE_DURATION: 800,   // 0.8 seconds for fade
         MAX_ZOOM: 8           // Maximum zoom factor
     };
@@ -95,10 +95,14 @@ document.addEventListener('DOMContentLoaded', function() {
         playButton.style.opacity = '0';
         playButton.style.pointerEvents = 'none';
         
-        // First frame to trigger transition
+        // Fade out the background image
+        gameAreaContainer.style.transition = `opacity ${ANIMATION.ZOOM_DURATION}ms ease-in-out`;
+        
+        // First frame to trigger transitions
         setTimeout(() => {
             zoomIcon.style.transform = `scale(${ANIMATION.MAX_ZOOM})`;
             zoomIcon.style.opacity = '0';
+            gameAreaContainer.style.opacity = '0.1'; // Fade background to almost transparent but not completely
         }, 50);
         
         // When zoom animation completes
@@ -118,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Hide the launcher container after fade completes
                 setTimeout(() => {
                     gameAreaContainer.style.visibility = 'hidden';
+                    gameAreaContainer.style.opacity = '1'; // Reset opacity for when we return
                     
                     // Complete the setup
                     animationInProgress = false;

@@ -81,7 +81,7 @@ body {
     background: url('../assets/cutom-handheldBG.png') no-repeat center top;
     background-size: contain; /* Keep the image in its aspect ratio */
     background-color: #000; /* Black background */
-    transition: visibility 0.1s ease-in-out;
+    transition: visibility 0.1s ease-in-out, opacity 2.5s ease-in-out;
 }
 
 main {
